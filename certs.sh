@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
-letsencrypt-auto certonly --text --webroot --webroot-path /jail \
+letsencrypt-auto certonly --no-self-upgrade -n --text --standalone \
+    --standalone-supported-challenges http-01 \
     -d "$CERTS" --keep --agree-tos --email "$EMAIL"
