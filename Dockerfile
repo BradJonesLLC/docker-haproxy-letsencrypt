@@ -65,6 +65,8 @@ RUN mkdir /jail
 
 EXPOSE 80 443
 
+VOLUME /etc/letsencrypt
+
 COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
 
 ENTRYPOINT ["/usr/bin/supervisord"]
