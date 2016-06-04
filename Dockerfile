@@ -12,6 +12,7 @@ RUN buildDeps='curl gcc libc6-dev libpcre3-dev libssl-dev make libreadline-dev' 
     wget \
     ca-certificates \
     curl \
+    patch \
     python-setuptools \
     dnsmasq \
     libssl1.0.0 libpcre3 \
