@@ -12,7 +12,7 @@
 ## configuration ##
 ###################
 
-LE_CLIENT="/usr/local/bin/letsencrypt-auto"
+LE_CLIENT="certbot"
 
 HAPROXY_RELOAD_CMD="supervisorctl signal HUP haproxy"
 

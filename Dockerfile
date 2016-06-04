@@ -1,19 +1,18 @@
 # Much of this stolen from haproxy:1.6 dockerfile, with Lua support
 FROM debian:jessie
 
+RUN echo "deb http://ftp.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie.backports.list
+
 RUN buildDeps='curl gcc libc6-dev libpcre3-dev libssl-dev make libreadline-dev' \
     && set -x \
-    && apt-get update && apt-get install --no-install-recommends -y $buildDeps \
+    && apt-get update && apt-get install --no-install-recommends -yqq certbot -t jessie-backports \
+    && apt-get install --no-install-recommends -yqq $buildDeps \
     cron \
     wget \
     ca-certificates \
     supervisor \
     curl \
     libssl1.0.0 libpcre3 \
-    && wget https://dl.eff.org/certbot-auto \
-    && chmod a+x certbot-auto \
-    && mv certbot-auto /usr/local/bin/letsencrypt-auto \
-    && letsencrypt-auto --os-packages-only \
     && apt-get clean autoclean && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
@@ -46,8 +45,7 @@ RUN curl -SL "http://www.haproxy.org/download/${HAPROXY_MAJOR}/src/haproxy-${HAP
 		install-bin \
 	&& mkdir -p /usr/local/etc/haproxy \
 	&& cp -R /usr/src/haproxy/examples/errorfiles /usr/local/etc/haproxy/errors \
-	&& rm -rf /usr/src/haproxy \
-	&& apt-get purge -y --auto-remove $buildDeps
+	&& rm -rf /usr/src/haproxy
 
 COPY docker-entrypoint.sh /
 
@@ -60,6 +58,7 @@ RUN crontab /var/crontab.txt && chmod 600 /etc/crontab
 
 COPY supervisord.conf /etc/supervisor/conf.d
 COPY certs.sh /
+COPY bootstrap.sh /
 
 RUN mkdir /jail
 
@@ -69,4 +68,4 @@ VOLUME /etc/letsencrypt
 
 COPY haproxy.cfg /usr/local/etc/haproxy/haproxy.cfg
 
-ENTRYPOINT ["/usr/bin/supervisord"]
+ENTRYPOINT ["/bootstrap.sh"]
