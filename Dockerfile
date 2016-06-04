@@ -13,6 +13,7 @@ RUN buildDeps='curl gcc libc6-dev libpcre3-dev libssl-dev make libreadline-dev' 
     ca-certificates \
     curl \
     python-setuptools \
+    dnsmasq \
     libssl1.0.0 libpcre3 \
     && apt-get install --no-install-recommends -yqq certbot -t jessie-backports \
     && wget https://github.com/Supervisor/supervisor/archive/${SUPERVISOR_VERSION}.tar.gz \
