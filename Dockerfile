@@ -3,16 +3,21 @@ FROM debian:jessie
 
 RUN echo "deb http://ftp.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie.backports.list
 
+ENV SUPERVISOR_VERSION 3.3.0
+
 RUN buildDeps='curl gcc libc6-dev libpcre3-dev libssl-dev make libreadline-dev' \
     && set -x \
-    && apt-get update && apt-get install --no-install-recommends -yqq certbot -t jessie-backports \
-    && apt-get install --no-install-recommends -yqq $buildDeps \
+    && apt-get update && apt-get install --no-install-recommends -yqq $buildDeps \
     cron \
     wget \
     ca-certificates \
-    supervisor \
     curl \
+    python-setuptools \
     libssl1.0.0 libpcre3 \
+    && apt-get install --no-install-recommends -yqq certbot -t jessie-backports \
+    && wget https://github.com/Supervisor/supervisor/archive/${SUPERVISOR_VERSION}.tar.gz \
+    && tar -xvf ${SUPERVISOR_VERSION}.tar.gz \
+    && cd supervisor-${SUPERVISOR_VERSION} && python setup.py install \
     && apt-get clean autoclean && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
@@ -21,15 +26,14 @@ RUN cd /usr/src \
     && tar zxf lua-5.3.0.tar.gz \
     && cd lua-5.3.0 \
     && make linux \
-    && make INSTALL_TOP=/opt/lua53 install \
-    && cd /
+    && make INSTALL_TOP=/opt/lua53 install
 
 ENV HAPROXY_MAJOR 1.6
 ENV HAPROXY_VERSION 1.6.5
 ENV HAPROXY_MD5 5290f278c04e682e42ab71fed26fc082
 
 # see http://sources.debian.net/src/haproxy/1.5.8-1/debian/rules/ for some helpful navigation of the possible "make" arguments
-RUN curl -SL "http://www.haproxy.org/download/${HAPROXY_MAJOR}/src/haproxy-${HAPROXY_VERSION}.tar.gz" -o haproxy.tar.gz \
+RUN cd / && curl -SL "http://www.haproxy.org/download/${HAPROXY_MAJOR}/src/haproxy-${HAPROXY_VERSION}.tar.gz" -o haproxy.tar.gz \
 	&& echo "${HAPROXY_MD5}  haproxy.tar.gz" | md5sum -c \
 	&& mkdir -p /usr/src/haproxy \
 	&& tar -xzf haproxy.tar.gz -C /usr/src/haproxy --strip-components=1 \
@@ -56,7 +60,7 @@ COPY haproxy-acme-validation-plugin/cert-renewal-haproxy.sh /
 COPY crontab.txt /var/crontab.txt
 RUN crontab /var/crontab.txt && chmod 600 /etc/crontab
 
-COPY supervisord.conf /etc/supervisor/conf.d
+COPY supervisord.conf /etc/supervisord.conf
 COPY certs.sh /
 COPY bootstrap.sh /
 
