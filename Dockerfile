@@ -47,7 +47,7 @@ RUN cd / && curl -SL "http://www.haproxy.org/download/${HAPROXY_MAJOR}/src/hapro
 	&& tar -xzf haproxy.tar.gz -C /usr/src/haproxy --strip-components=1 \
 	&& rm haproxy.tar.gz \
 	&& patch -d /usr/src/haproxy -p1 < /tmp/haproxy-dns.patch \
-	&& rm /tmp/haproxy.patch \
+	&& rm /tmp/haproxy-*.patch \
 	&& make -C /usr/src/haproxy \
 		TARGET=linux2628 \
 		USE_PCRE=1 PCREDIR= \
