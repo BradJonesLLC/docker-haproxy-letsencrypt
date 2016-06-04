@@ -22,23 +22,31 @@ RUN buildDeps='curl gcc libc6-dev libpcre3-dev libssl-dev make libreadline-dev' 
     && apt-get clean autoclean && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
+ENV LUA_VERSION 5.3.0
+ENV LUA_VERSION_SHORT 53
+
 RUN cd /usr/src \
-    && curl -R -O http://www.lua.org/ftp/lua-5.3.0.tar.gz \
-    && tar zxf lua-5.3.0.tar.gz \
-    && cd lua-5.3.0 \
+    && curl -R -O http://www.lua.org/ftp/lua-${LUA_VERSION}.tar.gz \
+    && tar zxf lua-${LUA_VERSION}.tar.gz \
+    && rm lua-${LUA_VERSION}.tar.gz \
+    && cd lua-${LUA_VERSION} \
     && make linux \
-    && make INSTALL_TOP=/opt/lua53 install
+    && make INSTALL_TOP=/opt/lua${LUA_VERSION_SHORT} install
 
 ENV HAPROXY_MAJOR 1.6
 ENV HAPROXY_VERSION 1.6.5
 ENV HAPROXY_MD5 5290f278c04e682e42ab71fed26fc082
 
-# see http://sources.debian.net/src/haproxy/1.5.8-1/debian/rules/ for some helpful navigation of the possible "make" arguments
+# see http://discourse.haproxy.org/t/dynamic-dns-resolution-does-not-work-for-me-after-1-6-4-to-1-6-5-upgrade/310/2
+COPY haproxy-dns.patch /tmp
+
 RUN cd / && curl -SL "http://www.haproxy.org/download/${HAPROXY_MAJOR}/src/haproxy-${HAPROXY_VERSION}.tar.gz" -o haproxy.tar.gz \
 	&& echo "${HAPROXY_MD5}  haproxy.tar.gz" | md5sum -c \
 	&& mkdir -p /usr/src/haproxy \
 	&& tar -xzf haproxy.tar.gz -C /usr/src/haproxy --strip-components=1 \
 	&& rm haproxy.tar.gz \
+	&& patch -d /usr/src/haproxy -p1 < /tmp/haproxy-dns.patch \
+	&& rm /tmp/haproxy.patch \
 	&& make -C /usr/src/haproxy \
 		TARGET=linux2628 \
 		USE_PCRE=1 PCREDIR= \
