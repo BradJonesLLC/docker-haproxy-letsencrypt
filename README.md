@@ -9,8 +9,8 @@ generated at startup, as well as renewed (if necessary) once a week.
 docker run \
     -e CERTS=my.domain,my.other.domain \
     -e EMAIL=my.email@my.domain \
-    -v /etc/letsencrypt:/srv/letsencrypt \
-    -p 80:90 -p 443:443
+    -v /etc/letsencrypt:/etc/letsencrypt \
+    -p 80:90 -p 443:443 \
     bradjonesllc/docker-haproxy-letsencrypt
 ```
 
