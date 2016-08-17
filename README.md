@@ -17,6 +17,11 @@ docker run \
 You will almost certainly want to create an image `FROM` this image or
 mount your `haproxy.cfg` at `/usr/local/etc/haproxy/haproxy.cfg`.
 
+### Alternatives
+
+HAProxy is powerful, but notoriously difficult to configure. If you don't require
+HAProxy's functionality per se, consider [this similar image for Nginx](https://github.com/BradJonesLLC/docker-nginx-letsencrypt).
+
 ### License and Copyright
 
 &copy; Brad Jones LLC, Licensed under GPL-2. Some components MIT license.
