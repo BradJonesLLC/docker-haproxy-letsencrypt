@@ -10,7 +10,7 @@ docker run \
     -e CERTS=my.domain,my.other.domain \
     -e EMAIL=my.email@my.domain \
     -v /etc/letsencrypt:/etc/letsencrypt \
-    -p 80:90 -p 443:443 \
+    -p 80:80 -p 443:443 \
     bradjonesllc/docker-haproxy-letsencrypt
 ```
 
