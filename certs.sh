@@ -3,7 +3,7 @@
 if [ -n "$CERTS" ]; then
     certbot certonly --no-self-upgrade -n --text --standalone \
         --standalone-supported-challenges http-01 \
-        -d "$CERTS" --keep --agree-tos --email "$EMAIL" \
+        -d "$CERTS" --keep --expand --agree-tos --email "$EMAIL" \
         || exit 1
 
     mkdir -p /usr/local/etc/haproxy/certs
