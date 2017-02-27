@@ -2,7 +2,7 @@
 
 if [ -n "$CERTS" ]; then
     certbot certonly --no-self-upgrade -n --text --standalone \
-        --standalone-supported-challenges http-01 \
+        --preferred-challenges http-01 \
         -d "$CERTS" --keep --expand --agree-tos --email "$EMAIL" \
         || exit 1
 
