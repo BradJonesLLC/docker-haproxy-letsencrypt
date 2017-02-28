@@ -34,20 +34,16 @@ RUN cd /usr/src \
     && make linux \
     && make INSTALL_TOP=/opt/lua${LUA_VERSION_SHORT} install
 
-ENV HAPROXY_MAJOR 1.6
-ENV HAPROXY_VERSION 1.6.5
-ENV HAPROXY_MD5 5290f278c04e682e42ab71fed26fc082
+ENV HAPROXY_MAJOR 1.7
+ENV HAPROXY_VERSION 1.7.2
+ENV HAPROXY_MD5 7330b36f3764ebe409e9305803dc30e2
 
-# see http://discourse.haproxy.org/t/dynamic-dns-resolution-does-not-work-for-me-after-1-6-4-to-1-6-5-upgrade/310/2
-COPY haproxy-dns.patch /tmp
 
 RUN cd / && curl -SL "http://www.haproxy.org/download/${HAPROXY_MAJOR}/src/haproxy-${HAPROXY_VERSION}.tar.gz" -o haproxy.tar.gz \
 	&& echo "${HAPROXY_MD5}  haproxy.tar.gz" | md5sum -c \
 	&& mkdir -p /usr/src/haproxy \
 	&& tar -xzf haproxy.tar.gz -C /usr/src/haproxy --strip-components=1 \
 	&& rm haproxy.tar.gz \
-	&& patch -d /usr/src/haproxy -p1 < /tmp/haproxy-dns.patch \
-	&& rm /tmp/haproxy-*.patch \
 	&& make -C /usr/src/haproxy \
 		TARGET=linux2628 \
 		USE_PCRE=1 PCREDIR= \
