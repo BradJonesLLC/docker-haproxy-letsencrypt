@@ -1,6 +1,6 @@
 # Dockerized HAProxy with Let's Encrypt
 
-This container provides a HAProxy 1.6 application with Let's Encrypt certificates
+This container provides a HAProxy 1.7 application with Let's Encrypt certificates
 generated at startup, as well as renewed (if necessary) once a week.
 
 ## Usage
