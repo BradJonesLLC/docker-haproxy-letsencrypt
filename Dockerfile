@@ -16,6 +16,7 @@ RUN buildDeps='curl gcc libc6-dev libpcre3-dev libssl-dev make libreadline-dev' 
     python-setuptools \
     dnsmasq \
     libssl1.0.0 libpcre3 \
+    python-ndg-httpsclient \
     && apt-get install --no-install-recommends -yqq certbot -t jessie-backports \
     && wget https://github.com/Supervisor/supervisor/archive/${SUPERVISOR_VERSION}.tar.gz \
     && tar -xvf ${SUPERVISOR_VERSION}.tar.gz \
@@ -50,7 +51,7 @@ RUN cd / && curl -SL "http://www.haproxy.org/download/${HAPROXY_MAJOR}/src/hapro
 		USE_OPENSSL=1 \
 		USE_ZLIB=1 \
 		USE_LUA=yes LUA_LIB=/opt/lua53/lib/ \
-        LUA_INC=/opt/lua53/include/ LDFLAGS=-ldl \
+        	LUA_INC=/opt/lua53/include/ LDFLAGS=-ldl \
 		all \
 		install-bin \
 	&& mkdir -p /usr/local/etc/haproxy \
